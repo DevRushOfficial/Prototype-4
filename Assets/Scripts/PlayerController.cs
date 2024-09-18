@@ -1,11 +1,14 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private float _powerUpStrength = 12.0f;
     private float _speedRolling = 5.0f;
     private Rigidbody _playerRb;
     private GameObject _focalPoint;
 
+    [SerializeField]
     private bool _hasPowerUp;
 
     private void Start()
@@ -27,14 +30,27 @@ public class PlayerController : MonoBehaviour
         {
             _hasPowerUp = true;
             Destroy(other.gameObject);
+            StartCoroutine(PowerUpDuration());
         }
+    }
+
+    IEnumerator PowerUpDuration()
+    {
+        yield return new WaitForSeconds(7);
+        _hasPowerUp = false;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.CompareTag("Enemy") && _hasPowerUp)
         {
-            Debug.Log("PowerUp was taken");
+            Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
+            Vector3 playerDirection = collision.transform.position - transform.position;
+
+            enemyRigidbody.AddForce(playerDirection * _powerUpStrength, ForceMode.Impulse);
+
+
+            Debug.Log("PowerUp was used");
         }
     }
 }
