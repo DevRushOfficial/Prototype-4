@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FollowPlayer : MonoBehaviour
+public class EnemyChaser : MonoBehaviour
 {
     private float _speed = 1.0f;
     private Rigidbody _enemyRb;
