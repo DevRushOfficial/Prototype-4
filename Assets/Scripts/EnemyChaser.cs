@@ -14,7 +14,16 @@ public class EnemyChaser : MonoBehaviour
 
     void Update()
     {
+        DestroyOutOfBounds();
         Vector3 playerDirection = _player.transform.position - transform.position;
         _enemyRb.AddForce(playerDirection.normalized * _speed);            
+    }
+
+    private void DestroyOutOfBounds()
+    {
+        if(transform.position.y < -14)
+        {
+            Destroy(gameObject);
+        }
     }
 }

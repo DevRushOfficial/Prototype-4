@@ -5,10 +5,20 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject _enemyPrefab;
     private float _spawnRange = 9f;
+    public int _enemyCount;
 
     void Start()
     {
         SpawnEnemyWave(3);
+    }
+    void Update()
+    {
+        _enemyCount = FindObjectsOfType<EnemyChaser>().Length;
+        
+        if( _enemyCount == 0)
+        {
+            SpawnEnemyWave(1);
+        }
     }
 
     private void SpawnEnemyWave(int enemiesToSpawn)
