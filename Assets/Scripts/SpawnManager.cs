@@ -4,11 +4,16 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject _enemyPrefab;
+    [SerializeField]
+    private GameObject _powerupPrefab;
+
     private float _spawnRange = 9f;
-    public int _enemyCount;
+    private int _enemyCount;
+    private int _spawnCount = 1;
 
     void Start()
     {
+        Instantiate(_powerupPrefab, GenerateSpawnPosition(), _powerupPrefab.transform.rotation);
         SpawnEnemyWave(3);
     }
     void Update()
@@ -17,7 +22,9 @@ public class SpawnManager : MonoBehaviour
         
         if( _enemyCount == 0)
         {
-            SpawnEnemyWave(1);
+            _spawnCount++;
+            Instantiate(_powerupPrefab, GenerateSpawnPosition(), _powerupPrefab.transform.rotation);
+            SpawnEnemyWave(_spawnCount);
         }
     }
 

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EnemyChaser : MonoBehaviour
 {
+    private const float Bounds = -14f;
     private float _speed = 1.0f;
     private Rigidbody _enemyRb;
     private GameObject _player;
@@ -15,13 +16,18 @@ public class EnemyChaser : MonoBehaviour
     void Update()
     {
         DestroyOutOfBounds();
+        ChasePlayer();
+    }
+
+    private void ChasePlayer()
+    {
         Vector3 playerDirection = _player.transform.position - transform.position;
-        _enemyRb.AddForce(playerDirection.normalized * _speed);            
+        _enemyRb.AddForce(playerDirection.normalized * _speed);
     }
 
     private void DestroyOutOfBounds()
     {
-        if(transform.position.y < -14)
+        if(transform.position.y < Bounds)
         {
             Destroy(gameObject);
         }

@@ -3,17 +3,17 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private const float PowerUpDurationSeconds = 7f;
+    private bool _hasPowerUp;
     private float _powerUpStrength = 12.0f;
     private float _speedRolling = 5.0f;
+
     private Rigidbody _playerRb;
     private GameObject _focalPoint;
-
     [SerializeField]
     private GameObject _powerupIndicator;
-    [SerializeField]
-    private bool _hasPowerUp;
 
-    private void Start()
+    void Start()
     {
         _playerRb = GetComponent<Rigidbody>();
         _focalPoint = GameObject.Find("Focal Point");
@@ -32,16 +32,21 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("PowerUp"))
         {
-            _hasPowerUp = true;
-            _powerupIndicator.SetActive(true);
-            Destroy(other.gameObject);
-            StartCoroutine(PowerUpDuration());
+            ActivatePowerUp(other);
         }
+    }
+
+    private void ActivatePowerUp(Collider powerUp)
+    {
+        _hasPowerUp = true;
+        _powerupIndicator.SetActive(true);
+        Destroy(powerUp.gameObject);
+        StartCoroutine(PowerUpDuration());
     }
 
     IEnumerator PowerUpDuration()
     {
-        yield return new WaitForSeconds(7);
+        yield return new WaitForSeconds(PowerUpDurationSeconds);
         _hasPowerUp = false;
         _powerupIndicator.SetActive(false);
     }
@@ -50,13 +55,16 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Enemy") && _hasPowerUp)
         {
-            Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
-            Vector3 playerDirection = collision.transform.position - transform.position;
-
-            enemyRigidbody.AddForce(playerDirection * _powerUpStrength, ForceMode.Impulse);
-
-
-            Debug.Log("PowerUp was used");
+            ApplyKnockbackToEnemy(collision);
         }
+    }
+
+    private void ApplyKnockbackToEnemy(Collision enemy)
+    {
+        Rigidbody enemyRigidbody = enemy.gameObject.GetComponent<Rigidbody>();
+        Vector3 playerDirection = enemy.transform.position - transform.position;
+        enemyRigidbody.AddForce(playerDirection * _powerUpStrength, ForceMode.Impulse);
+
+        Debug.Log("PowerUp was used");
     }
 }
