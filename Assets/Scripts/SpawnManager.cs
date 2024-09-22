@@ -16,6 +16,7 @@ public class SpawnManager : MonoBehaviour
         Instantiate(_powerupPrefab, GenerateSpawnPosition(), _powerupPrefab.transform.rotation);
         SpawnEnemyWave(3);
     }
+
     void Update()
     {
         _enemyCount = FindObjectsOfType<EnemyChaser>().Length;
